@@ -10,8 +10,12 @@
 
 @interface FTActivityIndicatorStyle : NSObject
 
++ (FTActivityIndicatorStyle *)instance;
+
 - (void)configure;
 - (NSDictionary *)getStyle;
+
+- (void)drawActivityIndicator;
 
 
 @end

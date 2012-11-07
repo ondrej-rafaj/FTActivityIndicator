@@ -9,6 +9,9 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
+#import "FTActivityIndicatorStyleBoldCircleArrow.h"
+
+
 @class FTActivityIndicatorStyle;
 
 @interface FTActivityIndicator : UIView

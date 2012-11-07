@@ -10,6 +10,10 @@
 
 @implementation FTActivityIndicatorStyle
 
++ (FTActivityIndicatorStyle *)instance {
+    return nil;
+}
+
 - (void)configure {
     
 }
@@ -17,5 +21,10 @@
 - (NSDictionary *)getStyle {
     return nil;
 }
+
+- (void)drawActivityIndicator {
+    
+}
+
 
 @end
