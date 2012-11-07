@@ -7,28 +7,33 @@
 //
 
 #import "FTActivityIndicator.h"
+#import <QuartzCore/QuartzCore.h>
 
 
 @interface FTActivityIndicator ()
 
-//@property (nonatomic) BOOL hide
+@property (nonatomic, strong) FTActivityIndicatorStyleDetails *styleDetails;
+@property (nonatomic) BOOL doesHideWhenStopped;
 
 @end
 
 
 @implementation FTActivityIndicator
 
-@synthesize isAnimating = _isAnimating;
-@synthesize hidesWhenStopped = _hidesWhenStopped;
-@synthesize activityIndicatorViewStyle = _activityIndicatorViewStyle;
-
 
 #pragma mark Initialization
+
+- (void)doSetup {
+    _doesHideWhenStopped = NO;
+    [self setBackgroundColor:[UIColor clearColor]];
+}
 
 - (id)initWithActivityIndicatorStyle:(FTActivityIndicatorStyle *)style {
     self = [super initWithFrame:CGRectMake(0, 0, 28, 28)];
     if (self) {
-        
+        _activityIndicatorViewStyle = style;
+        _styleDetails = [_activityIndicatorViewStyle getStyleDetails];
+        [self doSetup];
     }
     return self;
 }
@@ -36,7 +41,7 @@
 - (id)init {
     self = [super init];
     if (self) {
-        
+        [self doSetup];
     }
     return self;
 }
@@ -44,7 +49,7 @@
 - (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
-        
+        [self doSetup];
     }
     return self;
 }
@@ -52,7 +57,7 @@
 - (id)initWithCoder:(NSCoder *)aDecoder {
     self = [super initWithCoder:aDecoder];
     if (self) {
-        
+        [self doSetup];
     }
     return self;
 }
@@ -60,21 +65,55 @@
 #pragma mark Animations
 
 - (void)startAnimating {
-    
+    [self setHidden:NO];
+    CABasicAnimation *rotationAnimation;
+    rotationAnimation = [CABasicAnimation animationWithKeyPath:@"transform.rotation.z"];
+    rotationAnimation.toValue = [NSNumber numberWithFloat:((M_PI * 2.0) * (_styleDetails.revertedRotation ? -1.0 : 1.0))];
+    rotationAnimation.duration = _styleDetails.rotationDuration;
+    rotationAnimation.cumulative = YES;
+    rotationAnimation.repeatCount = 5;
+    [self.layer addAnimation:rotationAnimation forKey:@"rotationAnimation"];
+    _isAnimating = YES;
 }
 
 - (void)stopAnimating {
-    
+    [self.layer removeAllAnimations];
+    _isAnimating = NO;
+    if ([self hidesWhenStopped]) {
+        [self setHidden:YES];
+    }
+}
+
+- (void)reloadAnimation {
+    [self stopAnimating];
+    [self startAnimating];
 }
 
 #pragma Settings
 
 - (BOOL)hidesWhenStopped {
-    return _hidesWhenStopped;
+    return _doesHideWhenStopped;
 }
 
 - (void)setHidesWhenStopped:(BOOL)hides {
-    
+    _doesHideWhenStopped = hides;
+    if (_doesHideWhenStopped && !_isAnimating) {
+        [self setHidden:YES];
+    }
+}
+
+- (void)setRotationDuration:(NSTimeInterval)time {
+    _styleDetails.rotationDuration = time;
+    if (_isAnimating) {
+        [self reloadAnimation];
+    }
+}
+
+- (void)setRevertedRotation:(BOOL)revertedRotation {
+    _styleDetails.revertedRotation = revertedRotation;
+    if (_isAnimating) {
+        [self reloadAnimation];
+    }
 }
 
 #pragma mark Processes
@@ -90,25 +129,7 @@
 #pragma mark drawRect
 
 - (void)drawRect:(CGRect)rect {
-    UIBezierPath* bezier2Path = [UIBezierPath bezierPath];
-    [bezier2Path moveToPoint: CGPointMake(8.34, 8.34)];
-    [bezier2Path addCurveToPoint: CGPointMake(8.34, 19.66) controlPoint1: CGPointMake(5.22, 11.47) controlPoint2: CGPointMake(5.22, 16.53)];
-    [bezier2Path addLineToPoint: CGPointMake(14.13, 16.37)];
-    [bezier2Path addLineToPoint: CGPointMake(19.72, 19.59)];
-    [bezier2Path addCurveToPoint: CGPointMake(19.66, 8.34) controlPoint1: CGPointMake(22.78, 16.46) controlPoint2: CGPointMake(22.76, 11.45)];
-    [bezier2Path addCurveToPoint: CGPointMake(8.34, 8.34) controlPoint1: CGPointMake(16.53, 5.22) controlPoint2: CGPointMake(11.47, 5.22)];
-    [bezier2Path closePath];
-    [bezier2Path moveToPoint: CGPointMake(23.28, 4.19)];
-    [bezier2Path addCurveToPoint: CGPointMake(23.28, 23.28) controlPoint1: CGPointMake(28.56, 9.46) controlPoint2: CGPointMake(28.56, 18.01)];
-    [bezier2Path addCurveToPoint: CGPointMake(4.19, 23.28) controlPoint1: CGPointMake(18.01, 28.56) controlPoint2: CGPointMake(9.46, 28.56)];
-    [bezier2Path addCurveToPoint: CGPointMake(4.19, 4.19) controlPoint1: CGPointMake(-1.08, 18.01) controlPoint2: CGPointMake(-1.08, 9.46)];
-    [bezier2Path addCurveToPoint: CGPointMake(23.28, 4.19) controlPoint1: CGPointMake(9.46, -1.08) controlPoint2: CGPointMake(18.01, -1.08)];
-    [bezier2Path closePath];
-    [[UIColor lightGrayColor] setFill];
-    [bezier2Path fill];
-    [[UIColor clearColor] setStroke];
-    bezier2Path.lineWidth = 1;
-    [bezier2Path stroke];
+    [_activityIndicatorViewStyle drawActivityIndicator];
 }
 
 

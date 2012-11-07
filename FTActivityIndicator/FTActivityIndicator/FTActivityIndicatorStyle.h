@@ -8,14 +8,29 @@
 
 #import <Foundation/Foundation.h>
 
+
+@class FTActivityIndicatorStyleDetails;
+
+
 @interface FTActivityIndicatorStyle : NSObject
 
 + (FTActivityIndicatorStyle *)instance;
 
 - (void)configure;
-- (NSDictionary *)getStyle;
+- (FTActivityIndicatorStyleDetails *)getStyleDetails;
 
 - (void)drawActivityIndicator;
 
+
+@end
+
+
+@interface FTActivityIndicatorStyleDetails : NSObject
+
++ (id)instance;
+
+@property (nonatomic) NSTimeInterval rotationDuration;
+@property (nonatomic) CGSize size;
+@property (nonatomic) BOOL revertedRotation;
 
 @end

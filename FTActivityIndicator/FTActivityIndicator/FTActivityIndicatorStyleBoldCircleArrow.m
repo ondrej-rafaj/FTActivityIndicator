@@ -15,8 +15,8 @@
     return instance;
 }
 
-- (NSDictionary *)getStyle {
-    return nil;
+- (FTActivityIndicatorStyleDetails *)getStyleDetails {
+    return [super getStyleDetails];
 }
 
 - (void)drawActivityIndicator {

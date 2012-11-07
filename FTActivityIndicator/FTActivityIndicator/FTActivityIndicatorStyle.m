@@ -18,13 +18,26 @@
     
 }
 
-- (NSDictionary *)getStyle {
-    return nil;
+- (FTActivityIndicatorStyleDetails *)getStyleDetails {
+    return [FTActivityIndicatorStyleDetails instance];
 }
 
 - (void)drawActivityIndicator {
     
 }
 
+
+@end
+
+
+@implementation FTActivityIndicatorStyleDetails
+
++ (id)instance {
+    FTActivityIndicatorStyleDetails *instance = [[FTActivityIndicatorStyleDetails alloc] init];
+    [instance setSize:CGSizeMake(28, 28)];
+    [instance setRotationDuration:2.3];
+    [instance setRevertedRotation:NO];
+    return instance;
+}
 
 @end

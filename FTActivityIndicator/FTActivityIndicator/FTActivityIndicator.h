@@ -19,13 +19,17 @@
 
 @property (nonatomic, readonly) BOOL isAnimating;
 @property (nonatomic) BOOL hidesWhenStopped;
-@property (nonatomic, strong) FTActivityIndicatorStyle *activityIndicatorViewStyle;
+@property (nonatomic, readonly) FTActivityIndicatorStyle *activityIndicatorViewStyle;
 
 
 - (id)initWithActivityIndicatorStyle:(FTActivityIndicatorStyle *)style;
 
+- (void)setRotationDuration:(NSTimeInterval)time;
+- (void)setRevertedRotation:(BOOL)revertedRotation;
+
 - (void)startAnimating;
 - (void)stopAnimating;
+- (void)reloadAnimation;
 
 - (void)showActivityIndicatorWhilePerforming:(SEL)selector onTarget:(id)target;
 - (void)showActivityIndicatorWhilePerformingBackgroundProcess:(SEL)selector onTarget:(id)target;
